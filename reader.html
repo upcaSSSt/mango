@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/null.css">
+    <link rel="stylesheet" href="src/reader.css">
+    <title>mango</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <div class="header__menu chapters"></div>
+        <div class="header__container row">
+          <a class="header__title"></a>
+          <div class="header__notice">
+            Нажмите по центру, чтобы убрать шапку
+          </div>
+          <select class="header__select"></select>
+          <div class="row">
+            <button class="header__btn">-</button>
+            <button class="header__chapter"></button>
+            <button class="header__btn">+</button>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+        <div class="main__btns">
+          <button class="main__btn"></button>
+          <button class="main__center"></button>
+          <button class="main__btn"></button>
+        </div>
+        <img class="main__page" alt="page">
+      </main>
+    </div>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script type="module" src="src/global.js"></script>
+    <script type="module" src="src/reader.js"></script>
+  </body>
+</html>
