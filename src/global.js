@@ -31,9 +31,11 @@ export async function insertChapters(title) {
   const res = (await gapi.client.drive.files.list({
     q: `'${title}' in parents and trashed=false`,
     fields: 'files(id, name)',
+    orderBy: 'name',
+    pageSize: 1000,
   })).result.files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
 
-  for (let i = 0; i < res.length - 1; i++)
+  for (let i = 1; i < res.length; i++)
     chapters.insertAdjacentHTML('beforeend',
       `<a class="ref" href="../reader.html?title=${title}&chapter=${res[i].id}">${res[i].name}</a>`);
   return res;

@@ -4,24 +4,24 @@ const container = document.querySelector('.main__container');
 
 loadGapi(authWindow);
 window.addEventListener('gapiReady', async () => {
-  const root = await gapi.client.drive.files.list({
-    q: 'name="manga" and mimeType="application/vnd.google-apps.folder" and "root" in parents and trashed=false',
-    fields: 'files(id, name)'
-  });
   const titles = await gapi.client.drive.files.list({
-    q: `'${root.result.files[0].id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+    q: '"1ZvNMBF6qAjqYfweWc8IaHiFtgm1U7YzS" in parents and trashed=false',
     fields: 'files(id, name)',
-    orderBy: 'name'
+    orderBy: 'name',
   });
 
   const imgs = await Promise.all(titles.result.files.map(async (t) => {
-    const chapters = await gapi.client.drive.files.list({
-      q: `'${t.id}' in parents and mimeType='application/vnd.google-apps.folder' and name='Том 1 Глава 1' and trashed=false`,
-      fields: 'files(id, name)'
+    const chapter = await gapi.client.drive.files.list({
+      q: `'${t.id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+      fields: 'files(id, name)',
+      orderBy: 'name',
+      pageSize: 1,
     });
     const cover = await gapi.client.drive.files.list({
-      q: `'${chapters.result.files[0].id}' in parents and name='1.jpg' and mimeType contains 'image/' and trashed=false`,
-      fields: 'files(id, name)'
+      q: `'${chapter.result.files[0].id}' in parents and trashed=false`,
+      fields: 'files(id, name)',
+      orderBy: 'name',
+      pageSize: 1,
     });
 
     return imgUrl(cover.result.files[0].id);

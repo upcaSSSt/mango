@@ -10,6 +10,7 @@ const chapterSwitchers = document.querySelectorAll('.header__btn');
 const chapterName = document.querySelector('.header__chapter');
 const menu = document.querySelector('.header__menu');
 const select = document.querySelector('.header__select');
+const progress = document.querySelector('.progress');
 
 loadGapi();
 window.addEventListener('gapiReady', async () => {
@@ -23,8 +24,9 @@ window.addEventListener('gapiReady', async () => {
     fields: 'name',
   })).result.name;
   chapterName.onclick = () => menu.classList.toggle('active');
+  document.querySelector('.header__close').onclick = () => menu.classList.remove('active');
   document.querySelector('.main__center').onclick = () => {
-    document.querySelector('.header__notice').textContent = '';
+    document.querySelector('.header__notice').style.display = 'none';
     document.querySelector('.header').classList.toggle('hide');
   };
   const chapters = await insertChapters(p.get('title'));
@@ -33,7 +35,11 @@ window.addEventListener('gapiReady', async () => {
     q: `'${p.get('chapter')}' in parents and trashed=false`,
     fields: 'files(id, name)',
   })).result.files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-  const blobs = await Promise.all(pages.map((p) => imgUrl(p.id)));
+  const blobs = await Promise.all(pages.map((p) => {
+    progress.value += 1 / pages.length;
+    return imgUrl(p.id);
+  }));
+  progress.style.display = 'none';
   page.src = blobs[0];
   for (let blob = 1; blob <= blobs.length; blob++)
     select.insertAdjacentHTML('beforeend', `<option value="${blob}">${blob} / ${blobs.length}</option>`);

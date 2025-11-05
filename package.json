@@ -1,0 +1,25 @@
+{
+  "name": "mango",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/upcaSSSt/mango.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/upcaSSSt/mango/issues"
+  },
+  "homepage": "https://github.com/upcaSSSt/mango#readme",
+  "dependencies": {
+    "vite": "^7.1.11"
+  }
+}
