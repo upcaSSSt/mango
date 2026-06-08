@@ -1,48 +1,42 @@
-const API_KEY = 'AIzaSyAYpFxuD1R8Gcrfg8v6DENS-HwWxqNT9ok';
-const CLIENT_ID = '147622331730-gn5atqaid2gcgaqu687polg686pup2dq.apps.googleusercontent.com';
-const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
-const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+const TOKEN = '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';
+export const RAW_URL = 'https://raw.githubusercontent.com/petr538/manga/main/';
 
-let tokenClient;
+export const mangas = JSON.parse(sessionStorage.getItem('mangas')) ?? {};
 
-export function loadGapi(callback = () => window.dispatchEvent(new Event('gapiReady'))) {
-  window.addEventListener('load', () => {
-    gapi.load('client', async () => {
-      await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
-      callback();
-    });
-    tokenClient = google.accounts.oauth2.initTokenClient({ client_id: CLIENT_ID, scope: SCOPES });
-  });
+if ((() => { for (const _ in mangas) return false; return true; })()) {
+  const pages = await fetch('https://api.github.com/repos/petr538/manga/git/trees/main?recursive=1', { method: 'get',
+    headers: {
+      Authorization: 'Bearer ' + TOKEN,
+      Accept: 'application/vnd.github+json',
+    }
+  }).then(r => r.json()).then(d => d.tree.sort(compare));
+
+  for (const p of pages) {
+    const [title, chapter, name] = p.path.split('/');
+    if (!chapter || !name) continue;
+
+    mangas[title] ||= [{ name: chapter, pages: [] }];
+    if (mangas[title].at(-1).name !== chapter)
+      mangas[title].push({ name: chapter, pages: [] });
+    mangas[title].at(-1).pages.push(encodeURI(p.path));
+  }
+  sessionStorage.setItem('mangas', JSON.stringify(mangas));
+
+  function compare(a, b) {
+    const aMatches = a.path.matchAll(/(\d+)[^\/.\d]*/g);
+    for (const bMatch of b.path.matchAll(/(\d+)[^\/.\d]*/g)) {
+      const aMatch = aMatches.next().value;
+      if (!aMatch) return -1;
+      if (aMatch[0] !== bMatch[0])
+        return aMatch[1] === bMatch[1] ? aMatch[0].length - bMatch[0].length : aMatch[1] - bMatch[1];
+    }
+    return 0;
+  }
 }
 
-export function authWindow() {
-  tokenClient.callback = async (res) => {
-    if (res.error)
-      throw res;
-    localStorage.accessToken = gapi.client.getToken().access_token;
-    await gapi.client.load('drive', 'v3');
-    window.dispatchEvent(new Event('gapiReady'));
-  };
-  tokenClient.requestAccessToken({ prompt: gapi.client.getToken() ? '' : 'consent' });
-}
-
-export async function insertChapters(title) {
+export function insertChapters(title) {
   const chapters = document.querySelector('.chapters');
-  const res = (await gapi.client.drive.files.list({
-    q: `'${title}' in parents and trashed=false`,
-    fields: 'files(id, name)',
-    orderBy: 'name',
-    pageSize: 1000,
-  })).result.files.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }));
-
-  for (let i = 1; i < res.length; i++)
+  for (let i = 0; i < mangas[title].length; i++)
     chapters.insertAdjacentHTML('beforeend',
-      `<a class="ref" href="../reader.html?title=${title}&chapter=${res[i].id}">${res[i].name}</a>`);
-  return res;
-}
-
-export async function imgUrl(id) {
-  return URL.createObjectURL(await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, {
-    headers: { Authorization: 'Bearer ' + localStorage.accessToken }
-  }).then((r) => r.blob()));
+      `<a class="ref" href="/reader?title=${title}&chapter=${i}">${mangas[title][i].name}</a>`);
 }

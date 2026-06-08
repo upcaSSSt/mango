@@ -1,0 +1,38 @@
+name: Update Manga JSON
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install imagekit
+
+      - name: Generate JSON
+        env:
+          IK_PUBLIC_KEY: ${{ vars.PUBLIC_KEY }}
+          IK_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          IK_URL_ENDPOINT: ${{ vars.URL_ENDPOINT }}
+        run: node req-manga.js
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add manga.json
+          git diff --exit-code --quiet || git commit -m 'Automatically update the manga list [skip ci]'
+          git push
