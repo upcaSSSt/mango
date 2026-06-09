@@ -7,6 +7,6 @@ for (const t in mangas) {
   container.insertAdjacentHTML('beforeend',
     `<div class="title">\
       <img class="title__img" src="${RAW_URL}${cover}" alt="${t}">\
-      <a class="ref" href="/title?title=${t}">${t}</a>\
+      <a class="ref" href="title.html?title=${t}">${t}</a>\
     </div>`);
 }

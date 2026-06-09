@@ -12,7 +12,7 @@ const menu = document.querySelector('.header__menu');
 const select = document.querySelector('.header__select');
 
 title.textContent = p.get('title');
-title.href = '/title?title=' + p.get('title');
+title.href = 'title.html?title=' + p.get('title');
 chapterName.textContent = mangas[p.get('title')][p.get('chapter')].name;
 chapterName.onclick = () => menu.classList.toggle('active');
 document.querySelector('.header__close').onclick = () => menu.classList.remove('active');
@@ -57,7 +57,7 @@ window.addEventListener('keydown', (e) => {
 function turnChapter(delta) {
   const index = +p.get('chapter') + delta;
   console.log(index);
-  const ref = index < 0 || index >= mangas[p.get('title')].length ? `/title?title=${p.get('title')}` :
-    `/reader?title=${p.get('title')}&chapter=${index}`;
+  const ref = index < 0 || index >= mangas[p.get('title')].length ? `title.html?title=${p.get('title')}` :
+    `reader.html?title=${p.get('title')}&chapter=${index}`;
   window.location.replace(window.location.origin + ref);
 }

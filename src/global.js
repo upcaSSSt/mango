@@ -38,5 +38,5 @@ export function insertChapters(title) {
   const chapters = document.querySelector('.chapters');
   for (let i = 0; i < mangas[title].length; i++)
     chapters.insertAdjacentHTML('beforeend',
-      `<a class="ref" href="/reader?title=${title}&chapter=${i}">${mangas[title][i].name}</a>`);
+      `<a class="ref" href="reader.html?title=${title}&chapter=${i}">${mangas[title][i].name}</a>`);
 }

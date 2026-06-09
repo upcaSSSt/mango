@@ -9,6 +9,7 @@
 .title {
   text-align: center;
   overflow: hidden;
+  margin: 0 auto;
 }
 .title > *:first-child {
   margin-bottom: 10px;
