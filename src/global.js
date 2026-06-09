@@ -1,4 +1,4 @@
-const TOKEN = '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';
+const TOKEN = 'BUILD_TIME_TOKEN_PLACEHOLDER';
 export const RAW_URL = 'https://raw.githubusercontent.com/petr538/manga/main/';
 
 export const mangas = JSON.parse(sessionStorage.getItem('mangas')) ?? {};
