@@ -56,8 +56,7 @@ window.addEventListener('keydown', (e) => {
 
 function turnChapter(delta) {
   const index = +p.get('chapter') + delta;
-  console.log(index);
   const ref = index < 0 || index >= mangas[p.get('title')].length ? `title.html?title=${p.get('title')}` :
     `reader.html?title=${p.get('title')}&chapter=${index}`;
-  window.location.replace(window.location.origin + ref);
+  window.location.replace(ref);
 }
