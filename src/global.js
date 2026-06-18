@@ -23,8 +23,8 @@ if ((() => { for (const _ in mangas) return false; return true; })()) {
   sessionStorage.setItem('mangas', JSON.stringify(mangas));
 
   function compare(a, b) {
-    const aMatches = a.path.matchAll(/(\d+)[^\/.\d]*/g);
-    for (const bMatch of b.path.matchAll(/(\d+)[^\/.\d]*/g)) {
+    const aMatches = a.path.matchAll(/(\d+)[^\/\d]*/g);
+    for (const bMatch of b.path.matchAll(/(\d+)[^\/\d]*/g)) {
       const aMatch = aMatches.next().value;
       if (!aMatch) return -1;
       if (aMatch[0] !== bMatch[0])
